@@ -1,0 +1,23 @@
+services:
+  prometheus:
+    image: prom/prometheus:v2.45.2
+    user: root
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/grafana/prometheus:/prometheus
+    container_name: prometheus
+    restart: always
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    user: 1000:1000
+    volumes:
+      - ./data/grafana/grafana:/var/lib/grafana
+    env_file:
+      - .env
+    depends_on:
+      - prometheus
+    ports:
+      - 3927:3000
